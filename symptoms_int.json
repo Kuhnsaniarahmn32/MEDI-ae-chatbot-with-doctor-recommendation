@@ -1,0 +1,355 @@
+{
+  "intents": [
+    {
+      "tag": "neurology",
+      "patterns": [
+        "headache", "migraine", "head pain", "throbbing head",
+        "dizziness", "dizzy", "vertigo", "lightheaded", "unsteady",
+        "numbness", "tingling", "pins and needles",
+        "memory loss", "forgetfulness", "trouble remembering",
+        "seizure", "fit", "convulsion",
+        "tremor", "shaking", "trembling",
+        "difficulty speaking", "slurred speech", "trouble talking",
+        "confusion", "disorientation", "bewilderment",
+        "loss of balance", "unsteadiness", "poor coordination",
+        "fainting", "passing out", "blacking out",
+        "weakness in limbs", "muscle weakness", "paralysis",
+        "blurred vision", "double vision", "vision problems",
+        "sensitivity to light", "photophobia",
+        "stroke symptoms", "facial drooping", "arm weakness", "speech difficulties",
+        "Alzheimer's symptoms", "dementia", "cognitive decline",
+        "nerve pain", "neuralgia", "neuropathy"
+      ],
+      "responses": ["Neurologist"],
+      "severity_mapping": {
+        "mild": "General Physician",
+        "moderate": "General Physician",
+        "severe": "Neurologist"
+      }
+    },
+    {
+      "tag": "gastroenterology",
+      "patterns": ["stomach pain", "bloating", "diarrhea", "constipation", "blood in stool", "nausea", "vomiting", "heartburn", "difficulty swallowing", "abdominal cramps", "loss of appetite", "jaundice", "indigestion", "excessive gas", "rectal pain", "liver problems", "gallbladder pain", "ulcers", "inflammatory bowel disease", "hemorrhoids"],
+      "responses": ["Gastroenterologist"],
+      "severity_mapping": {
+        "mild": "General Physician",
+        "moderate": "Gastroenterologist",
+        "severe": "Gastroenterologist"
+      }
+    },
+    {
+      "tag": "cardiology",
+      "patterns": [
+        "chest pain", "shortness of breath", "heart palpitations", 
+        "high blood pressure", "irregular heartbeat", "dizziness when standing", 
+        "swelling in legs", "fatigue", "blue lips", "racing heart", "fainting", 
+        "decreased exercise tolerance", "cold sweats", "heart murmur", 
+        "coronary artery disease", "heart failure", "heart valve problems", 
+        "cholesterol issues", "heart attack", "heart pain", "chest pressure",
+        "chest tightness", "palpitation", "heavy heart", "vision blurred",
+        "cardiac", "cardiovascular", "coronary", "angina", "myocardial infarction",
+        "arrhythmia", "atrial fibrillation", "heart disease"
+      ],
+      "responses": ["Cardiologist"],
+      "severity_mapping": {
+        "mild": "Cardiologist",
+        "moderate": "Cardiologist",
+        "severe": "Cardiologist"
+      },
+      "emergency_indicators": ["heart attack", "severe chest pain", "chest pain with shortness of breath"]
+    },
+    {
+      "tag": "dermatology",
+      "patterns": ["rash", "itching", "redness", "skin irritation", "acne", "skin growths", "moles", "blisters", "hives", "excessive sweating", "dry skin", "skin discoloration", "hair loss", "brittle nails", "skin ulcers", "psoriasis", "eczema", "skin cancer concerns", "warts", "fungal infections"],
+      "responses": ["Dermatologist"],
+      "severity_mapping": {
+        "mild": "General Physician",
+        "moderate": "Dermatologist",
+        "severe": "Dermatologist"
+      }
+    },
+    {
+      "tag": "ent",
+      "patterns": ["ear pain", "sore throat", "nasal congestion", "runny nose", "hearing loss", "ringing in ears", "snoring", "difficulty swallowing", "hoarseness", "facial pain", "post-nasal drip", "tonsil issues", "nosebleeds", "ear discharge", "vertigo", "sinus pressure", "throat infections", "voice changes", "ear infections", "balance problems"],
+      "responses": ["ENT Specialist"],
+      "severity_mapping": {
+        "mild": "General Physician",
+        "moderate": "ENT Specialist",
+        "severe": "ENT Specialist"
+      }
+    },
+    {
+      "tag": "general_medicine",
+      "patterns": [
+        "fever", "fatigue", "common cold", "cough", "flu symptoms", "general weakness", 
+        "mild pain", "insomnia", "unintentional weight loss", "unintentional weight gain", 
+        "excessive thirst", "frequent urination", "night sweats", "general malaise", 
+        "loss of appetite", "body aches", "mild depression", "mild anxiety", "high blood pressure", 
+        "mild diabetes symptoms", "minor injuries", "minor burns", "cuts", "sprains", 
+        "routine checkup", "vaccination", "preventive care", "mild respiratory infection", 
+        "sinus infection", "urinary tract infection", "minor skin infection", "mild headache",
+        "minor gastrointestinal issues", "acid reflux", "irritable bowel syndrome", "food allergies",
+        "mild mental health concerns", "minor digestive problems"
+      ],
+      "responses": ["General Physician"]
+    },
+    {
+      "tag": "orthopedics",
+      "patterns": ["joint pain", "knee pain", "back pain", "fracture", "sprain", "bone pain", "stiffness", "swelling in joints", "limited range of motion", "arthritis pain", "muscle weakness", "bone deformity", "clicking sounds in joints", "muscle spasms", "neck pain", "shoulder pain", "hip pain", "sports injuries", "tendonitis", "bursitis"],
+      "responses": ["Orthopedist"],
+      "severity_mapping": {
+        "mild": "General Physician",
+        "moderate": "Orthopedist",
+        "severe": "Orthopedist"
+      }
+    },
+    {
+      "tag": "pulmonology",
+      "patterns": ["coughing", "difficulty breathing", "wheezing", "shortness of breath", "chest tightness", "coughing up blood", "excessive mucus", "sleep apnea", "chronic cough", "rapid breathing", "bluish lips or face", "decreased exercise tolerance", "asthma attack", "COPD symptoms", "bronchitis", "pneumonia", "tuberculosis", "pulmonary fibrosis", "lung nodules"],
+      "responses": ["Pulmonologist"],
+      "severity_mapping": {
+        "mild": "General Physician",
+        "moderate": "Pulmonologist",
+        "severe": "Pulmonologist"
+      }
+    },{
+      "tag": "urology",
+      "patterns": ["frequent urination", "burning during urination", "blood in urine", "incontinence", "urinary urgency", "difficulty urinating", "testicular pain", "kidney pain", "flank pain", "urinary retention", "cloudy urine", "bloody urine", "strong-smelling urine", "erectile dysfunction", "prostate problems", "kidney stones", "urinary tract infections", "bladder issues", "male infertility"],
+      "responses": ["Urologist"],
+      "severity_mapping": {
+        "mild": "General Physician",
+        "moderate": "Urologist",
+        "severe": "Urologist"
+      },
+      "gender_specific": "male"
+    },
+    {
+      "tag": "allergology",
+      "patterns": ["allergic reactions", "sneezing", "itchy eyes", "hives", "food allergies", "drug allergies", "hay fever", "sinusitis", "allergic asthma", "insect sting reactions", "skin rash after exposure", "runny nose", "watery eyes", "anaphylaxis", "eczema", "chronic cough", "recurrent infections", "immune deficiencies"],
+      "responses": ["Allergist"],
+      "severity_mapping": {
+        "mild": "General Physician",
+        "moderate": "Allergist",
+        "severe": "Allergist"
+      }
+    },
+    {
+      "tag": "endocrinology",
+      "patterns": ["diabetes symptoms", "thyroid problems", "excessive thirst", "frequent urination", "unexplained weight changes", "fatigue", "heat or cold intolerance", "hormonal imbalance", "excessive hunger", "delayed growth", "excessive sweating", "menstrual irregularities", "insulin resistance", "adrenal disorders", "pituitary disorders", "osteoporosis", "metabolic disorders", "polycystic ovary syndrome"],
+      "responses": ["Endocrinologist"],
+      "severity_mapping": { "mild": "General Physician",
+        "moderate": "Endocrinologist",
+        "severe": "Endocrinologist"
+      }
+    },
+    {
+      "tag": "ophthalmology",
+      "patterns": ["eye pain", "vision loss", "blurry vision", "floaters", "eye redness", "double vision", "eye discharge", "dry eyes", "sensitivity to light", "cataracts", "glaucoma", "diabetic retinopathy", "macular degeneration", "eye infections", "strabismus", "corneal problems", "eye trauma", "vision changes", "vision blurred"],
+      "responses": ["Ophthalmologist"],
+      "severity_mapping": {
+        "mild": "General Physician",
+        "moderate": "Ophthalmologist",
+        "severe": "Ophthalmologist"
+      }
+    },
+    {
+      "tag": "rheumatology",
+      "patterns": ["joint pain", "muscle strains", "collagen diseases", "arthritis", "back pain", "muscle tenderness", "stiffness in multiple joints", "inflammation", "lupus symptoms", "rheumatoid arthritis", "gout", "fibromyalgia", "autoimmune disorders", "vasculitis", "scleroderma", "ankylosing spondylitis", "psoriatic arthritis"],
+      "responses": ["Rheumatologist"],
+      "severity_mapping": {
+        "mild": "General Physician",
+        "moderate": "Rheumatologist",
+        "severe": "Rheumatologist"
+      }
+    },
+    {
+      "tag": "psychiatry",
+      "patterns": ["severe depression", "anxiety disorder", "panic attacks", "hallucinations", "suicidal thoughts", "mood swings", "psychosis", "severe mental health issues", "bipolar disorder", "schizophrenia", "obsessive-compulsive disorder", "post-traumatic stress", "eating disorders", "addiction issues", "personality disorders", "attention deficit disorder"],
+      "responses": ["Psychiatrist"],
+      "severity_mapping": {
+        "mild": "General Physician",
+        "moderate": "Psychiatrist",
+        "severe": "Psychiatrist"
+      }
+    },
+    {
+      "tag": "gynecology",
+      "patterns": [
+        "menstrual pain", "period cramps", "dysmenorrhea",
+        "irregular periods", "menstrual irregularity", "abnormal menstruation",
+        "vaginal discharge", "unusual discharge",
+        "pelvic pain", "lower abdominal pain in women",
+        "breast lumps", "breast pain", "breast tenderness",
+        "pregnancy symptoms", "missed period", "morning sickness",
+        "fertility concerns", "trouble conceiving", "infertility",
+        "vaginal itching", "vaginal irritation",
+        "vaginal dryness", "painful intercourse",
+        "abnormal uterine bleeding", "heavy periods",
+        "hot flashes", "night sweats", "menopausal symptoms",
+        "ovarian cysts", "PCOS symptoms",
+        "uterine fibroids", "myomas",
+        "endometriosis", "painful periods",
+        "polycystic ovary syndrome", "PCOS",
+        "menopause symptoms", "perimenopause",
+        "contraception needs", "birth control",
+        "sexually transmitted infections", "STIs", "STDs",
+        "cervical screening", "pap smear"
+      ],
+      "responses": ["Gynecologist"],
+      "severity_mapping": {
+        "mild": "General Physician",
+        "moderate": "Gynecologist",
+        "severe": "Gynecologist"
+      },
+      "gender_specific": ["female", "woman", "girl", "ladies"]
+    }
+  ],
+  "hierarchies": {
+    "respiratory_issues": {
+      "root": "breathing difficulty",
+      "follow_up_questions": [
+        {"question": "Is your breathing difficulty accompanied by chest pain?", "if_yes": "check_cardiology", "if_no": "continue"},
+        {"question": "Do you have wheezing or coughing?", "if_yes": "check_pulmonology", "if_no": "continue"},
+        {"question": "Is the breathing difficulty caused by exertion?", "if_yes": "check_cardiology", "if_no": "check_general"}
+      ],
+      "branches": {
+        "check_cardiology": {"specialist": "Cardiologist"},
+        "check_pulmonology": {"specialist": "Pulmonologist"},
+        "check_general": {"specialist": "General Physician"}
+      }},
+    "pain": {
+      "root": "pain",
+      "follow_up_questions": [
+        {"question": "Where is the pain located?", "options": ["head", "chest", "abdomen", "joints", "back", "pelvic"]},
+        {"question": "How severe is the pain on a scale of 1-10?", "options": ["1-3 (mild)", "4-7 (moderate)", "8-10 (severe)"]}
+      ],
+      "gender_specific_routing": {
+        "female": {
+          "pelvic": "check_gynecology"
+        }
+      },
+      "branches": {
+        "check_gynecology": {"specialist": "Gynecologist"}
+      }
+    },
+    "digestive_issues": {
+      "root": "digestive problems",
+      "follow_up_questions": [
+        {"question": "Do you have abdominal pain?", "if_yes": "check_location", "if_no": "continue"},
+        {"question": "Do you have diarrhea or constipation?", "if_yes": "check_gastro", "if_no": "continue"},
+        {"question": "Do you have nausea or vomiting?", "if_yes": "check_gastro", "if_no": "check_general"}
+      ],
+      "branches": {
+        "check_location": {
+          "question": "Where is the pain located?",
+          "options": {
+            "upper right": {"specialist": "Gastroenterologist", "concern": "possible gallbladder issue"},
+            "upper left": {"specialist": "Gastroenterologist", "concern": "possible splenic issue"},
+            "lower right": {"specialist": "General Surgeon", "concern": "possible appendicitis"},
+            "lower left": {"specialist": "Gastroenterologist", "concern": "possible diverticulitis"},
+            "central": {"specialist": "Gastroenterologist", "concern": "possible ulcer or pancreatitis"}
+          }
+        },
+        "check_gastro": {"specialist": "Gastroenterologist"},
+        "check_general": {"specialist": "General Physician"}
+      }
+    },
+    "urinary_issues": {
+      "root": "urinary problems",
+      "follow_up_questions": [
+        {"question": "Do you have pain during urination?", "if_yes": "check_infection", "if_no": "continue"},
+        {"question": "Do you have blood in your urine?", "if_yes": "check_urgent", "if_no": "continue"},
+        {"question": "Do you have difficulty urinating?", "if_yes": "check_gender", "if_no": "check_general"}
+      ],
+      "branches": {
+        "check_infection": {"specialist": "General Physician"},
+        "check_urgent": {"specialist": "Urologist"},
+        "check_gender": {
+          "male": {"specialist": "Urologist"},
+          "female": {"specialist": "Gynecologist"}
+        },
+        "check_general": {"specialist": "General Physician"}
+      }
+    }
+  },
+  "differential_diagnosis": {
+    "chest_pain": [
+      {"condition": "Myocardial infarction", "probability": "high", "specialist": "Cardiologist", "key_indicators": ["radiating pain to left arm", "shortness of breath", "sweating"]},
+      {"condition": "Gastroesophageal reflux", "probability": "moderate", "specialist": "Gastroenterologist", "key_indicators": ["burning sensation", "worse after meals", "improved with antacids"]},
+      {"condition": "Anxiety/Panic attack", "probability": "moderate", "specialist": "Psychiatrist", "key_indicators": ["accompanying feelings of panic", "hyperventilation", "no physical exertion trigger"]},
+      {"condition": "Pulmonary embolism", "probability": "low", "specialist": "Pulmonologist", "key_indicators": ["sudden onset", "shortness of breath", "recent surgery or immobility"]}
+    ],"headache": [
+      {"condition": "Tension headache", "probability": "high", "specialist": "General Physician", "key_indicators": ["band-like pressure", "mild to moderate pain", "no nausea"]},
+      {"condition": "Migraine", "probability": "moderate", "specialist": "Neurologist", "key_indicators": ["throbbing pain", "nausea", "sensitivity to light"]},
+      {"condition": "Cluster headache", "probability": "low", "specialist": "Neurologist", "key_indicators": ["severe pain around one eye", "tearing", "nasal congestion"]},
+      {"condition": "Brain tumor", "probability": "very low", "specialist": "Neurologist", "key_indicators": ["progressive worsening", "worse in morning", "neurological symptoms"]}
+    ],
+    "abdominal_pain": [
+      {"condition": "Gastritis", "probability": "high", "specialist": "Gastroenterologist", "key_indicators": ["burning pain", "nausea", "improved with antacids"]},
+      {"condition": "Appendicitis", "probability": "moderate", "specialist": "General Surgeon", "key_indicators": ["pain in right lower quadrant", "fever", "loss of appetite"]},
+      {"condition": "Gallstones", "probability": "moderate", "specialist": "Gastroenterologist", "key_indicators": ["right upper quadrant pain", "pain after fatty meals", "nausea"]},
+      {"condition": "Inflammatory Bowel Disease", "probability": "low", "specialist": "Gastroenterologist", "key_indicators": ["chronic pain", "diarrhea", "blood in stool", "weight loss"]}
+    ],
+    "pelvic_pain": [
+      {"condition": "Menstrual cramps", "probability": "high", "specialist": "General Physician", "key_indicators": ["cyclic pain", "associated with menstruation", "cramping nature"], "gender_specific": "female"},
+      {"condition": "Ovarian cyst", "probability": "moderate", "specialist": "Gynecologist", "key_indicators": ["one-sided pain", "bloating", "irregular periods"], "gender_specific": "female"},
+      {"condition": "Endometriosis", "probability": "moderate", "specialist": "Gynecologist", "key_indicators": ["severe menstrual pain", "pain during intercourse", "chronic pelvic pain"], "gender_specific": "female"},
+      {"condition": "Pelvic inflammatory disease", "probability": "low", "specialist": "Gynecologist", "key_indicators": ["fever", "abnormal discharge", "pain during urination"], "gender_specific": "female"}
+    ]
+  },
+  "age_routing": {
+    "children": {
+      "headache": "Pediatric Neurologist",
+      "digestive_issues": "Pediatric Gastroenterologist",
+      "respiratory_issues": "Pediatric Pulmonologist",
+      "skin_issues": "Pediatric Dermatologist",
+      "bone_issues": "Pediatric Orthopedist"
+    },
+    "adolescent": {
+      "female": {
+        "menstrual_issues": "Adolescent Gynecologist",
+        "acne": "Dermatologist",
+        "mood_changes": "Adolescent Psychiatrist"
+      },
+      "male": {
+        "voice_changes": "ENT Specialist",
+        "acne": "Dermatologist",
+        "mood_changes": "Adolescent Psychiatrist"
+      }
+    },
+    "adult": {
+      "female": {
+        "pregnancy_symptoms": "Obstetrician",
+        "menstrual_issues": "Gynecologist",
+        "breast_concerns": "Breast Specialist"
+      },
+      "male": {
+        "prostate_issues": "Urologist",
+        "erectile_dysfunction": "Urologist"
+      }
+    },
+    "elderly": {
+      "joint_pain": "Geriatric Rheumatologist",
+      "memory_issues": "Geriatric Neurologist",
+      "heart_issues": "Geriatric Cardiologist",
+      "multiple_medications": "Geriatric Pharmacologist",
+      "falls": "Geriatric Medicine",
+      "cognitive_decline": "Geriatrician"
+    }
+  },
+  "gender_routing": {
+    "female": {
+      "menstrual issues": "Gynecologist",
+      "pregnancy": "Obstetrician",
+      "breast concerns": "Gynecologist",
+      "pelvic pain": "Gynecologist",
+      "menopause": "Gynecologist"
+    },
+    "male": {
+      "testicular pain": "Urologist",
+      "prostate issues": "Urologist",
+      "erectile dysfunction": "Urologist",
+      "male fertility": "Reproductive Endocrinologist"
+    }
+  }
+}
