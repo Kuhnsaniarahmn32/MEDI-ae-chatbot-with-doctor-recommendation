@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with MedAI</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --chat-bg: #f9f9f9;
+            --user-msg-bg: #dcf8c6;
+            --bot-msg-bg: #f1f0f0;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --secondary-text: #666666;
+            --card-shadow: rgba(0,0,0,0.1);
+            --emergency-color: #dc3545;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .chat-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .chat-box {
+            height: 450px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 20px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            background-color: var(--chat-bg);
+            box-shadow: 0 4px 8px var(--card-shadow);
+        }
+        
+        .message-container {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .user-message-container {
+            justify-content: flex-end;
+        }
+        
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 18px;
+            color: white;
+        }
+        
+        .bot-avatar {
+            background-color: var(--primary-color);
+        }
+        
+        .user-avatar {
+            background-color: #28a745;
+        }
+        
+        .user-message {
+            background-color: var(--user-msg-bg);
+            padding: 12px 15px;
+            border-radius: 18px 0px 18px 18px;
+            margin-bottom: 5px;
+            max-width: 70%;
+            box-shadow: 0 1px 2px var(--card-shadow);
+            word-wrap: break-word;
+            position: relative;
+            animation: slideInRight 0.3s ease-in-out;
+        }
+        
+        .bot-message {
+            background-color: var(--bot-msg-bg);
+            padding: 12px 15px;
+            border-radius: 0px 18px 18px 18px;
+            margin-bottom: 5px;
+            max-width: 70%;
+            box-shadow: 0 1px 2px var(--card-shadow);
+            word-wrap: break-word;
+            position: relative;
+            animation: slideInLeft 0.3s ease-in-out;
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideInLeft {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .timestamp {
+            font-size: 11px;
+            color: #999;
+            margin-top: 5px;
+            display: block;
+            text-align: right;
+        }
+        
+        .input-container {
+            display: flex;
+            position: relative;
+            margin-top: 15px;
+        }
+        
+        .input-field {
+            flex-grow: 1;
+            padding: 15px 20px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(26, 115, 232, 0.1);
+        }
+        
+        .send-btn {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .send-btn:hover {
+            background-color: #1669d5;
+            transform: scale(1.05);
+        }
+        
+        .suggestion-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .suggestion-btn {
+            margin-right: 8px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #dadce0;
+            background-color: white;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .suggestion-btn:hover {
+            background-color: #f0f7ff;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(26, 115, 232, 0.15);
+        }
+        
+        .doctor-results-container {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: white;
+            box-shadow: 0 4px 12px var(--card-shadow);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .results-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0;
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .filter-btn {
+            font-size: 0.9rem;
+            padding: 6px 12px;
+            border-radius: 15px;
+            border: 1px solid #dadce0;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .doctor-card {
+            border: 1px solid #eaeaea;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: white;
+            box-shadow: 0 3px 10px var(--card-shadow);
+            transition: all 0.3s;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .doctor-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 15px;
+        }
+        
+        .doctor-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0;
+        }
+        
+        .doctor-specialty {
+            font-size: 14px;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .doctor-rating {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        
+        .stars {
+            color: #ffc107;
+            font-size: 18px;
+        }
+        
+        .recommendation {
+            font-size: 12px;
+            color: var(--secondary-text);
+        }
+        
+        .doctor-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-icon {
+            min-width: 30px;
+            color: var(--primary-color);
+        }
+        
+        .info-text {
+            color: var(--secondary-text);
+        }
+        
+        .fees {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .doctor-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .contact-btn {
+            background-color: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+        
+        .contact-btn:hover {
+            background-color: #f0f7ff;
+        }
+        
+        .book-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+        
+        .book-btn:hover {
+            background-color: #1669d5;
+            transform: translateY(-2px);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(26, 115, 232, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .emergency-tag {
+            background-color: var(--emergency-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 10px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 30px;
+            color: var(--secondary-text);
+        }
+        
+        .no-results i {
+            font-size: 48px;
+            color: #ddd;
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .chat-box {
+                height: 400px;
+            }
+            
+            .doctor-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .user-message, .bot-message {
+                max-width: 85%;
+            }
+            
+            .results-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .filter-options {
+                margin-top: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-heartbeat mr-2"></i>MedAI
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/chat">Chat with MedAI</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5 chat-container">
+        <h1 class="text-center mb-4">
+            <i class="fas fa-comment-medical mr-2" style="color: var(--primary-color);"></i>
+            Chat with MedAI
+        </h1>
+        <p class="text-center text-muted mb-4">Describe your symptoms and location to find the right specialist</p>
+        
+        <div class="chat-box" id="chatBox">
+            <!-- Messages will appear here -->
+        </div>
+        
+        <div id="suggestionArea" class="suggestion-buttons"></div>
+        
+        <div class="input-container">
+            <input type="text" id="userInput" class="input-field" placeholder="Type your symptoms or location...">
+            <button class="send-btn" id="sendBtn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+        
+        <div id="doctorResults" class="doctor-results-container mt-4" style="display: none;">
+            <div class="results-header">
+                <h3 class="results-title" id="resultsTitle">Recommended Doctors</h3>
+                <div class="filter-options">
+                    <button class="filter-btn active" data-sort="rating">Top Rated</button>
+                    <button class="filter-btn" data-sort="fees">Lowest Fees</button>
+                    <button class="filter-btn" data-sort="experience">Most Experienced</button>
+                </div>
+            </div>
+            <div id="doctorsList">
+                <!-- Doctor cards will appear here -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const userId = 'user_' + Math.random().toString(36).substring(2, 9);
+        const chatBox = document.getElementById('chatBox');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const doctorResults = document.getElementById('doctorResults');
+        const doctorsList = document.getElementById('doctorsList');
+        const suggestionArea = document.getElementById('suggestionArea');
+        let allDoctors = []; // Store all doctors for filtering/sorting
+        
+        // Get current time for message timestamps
+        function getCurrentTime() {
+            const now = new Date();
+            return now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+        }
+        
+        // Add initial bot message with better styling
+        addBotMessage("Hello! I'm MedAI. I can help you find the right specialist based on your symptoms. Please tell me what symptoms you're experiencing and your location.", false);
+        
+        // Update initial suggestion buttons to include location hints
+        addSuggestionButtons([
+            "I have a headache and I'm in Chennai",
+            "Chest pain, Mumbai",
+            "Stomach pain in Delhi",
+            "Joint pain from Bangalore",
+            "Skin rash, Hyderabad"
+        ]);
+        
+        // Event listeners
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Setup filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const sortBy = this.getAttribute('data-sort');
+                sortDoctors(sortBy);
+            });
+        });
+        
+        function sortDoctors(criteria) {
+            if (!allDoctors || allDoctors.length === 0) return;
+            
+            let sortedDoctors;
+            switch(criteria) {
+                case 'rating':
+                    sortedDoctors = allDoctors.sort((a, b) => b.rating - a.rating);
+                    break;
+                case 'fees':
+                    sortedDoctors = allDoctors.sort((a, b) => a.fees - b.fees);
+                    break;
+                case 'experience':
+                    sortedDoctors = allDoctors.sort((a, b) => b.experience - a.experience);
+                    break;
+                default:
+                    sortedDoctors = allDoctors;
+            }
+            
+            displayDoctors(sortedDoctors);
+        }
+        
+        function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+            
+            // Add user message to chat
+            addUserMessage(message);
+            userInput.value = '';
+            
+            // Show typing indicator
+            const loadingId = showTypingIndicator();
+            
+            // Send to backend
+            fetch('/chat_api', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    message: message
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Remove typing indicator
+                hideTypingIndicator(loadingId);
+                
+                // Add bot response to chat
+                const isEmergency = data.is_emergency || (data.response && data.response.includes("EMERGENCY"));
+                addBotMessage(data.response, isEmergency);
+                
+                // If conversation is complete, show doctor results
+                if (data.conversation_complete && data.doctors) {
+                    showDoctorResults(data.doctors, data.specialty);
+                    
+                    // Add new suggestions based on results
+                    if (data.doctors.length > 0) {
+                        addSuggestionButtons([
+                            "Thank you for the recommendations",
+                            "Can I see doctors with lower fees?",
+                            "I have another symptom"
+                        ]);
+                    } else {
+                        addSuggestionButtons([
+                            "Let me try another location",
+                            "I have different symptoms",
+                            "Thank you"
+                        ]);
+                    }
+                } else {
+                    // Update suggestions based on conversation stage
+                    updateSuggestions(data.response);
+                }
+            })
+            .catch(error => {
+                // Remove typing indicator
+                hideTypingIndicator(loadingId);
+                
+                console.error('Error:', error);
+                addBotMessage("Sorry, there was an error processing your request. Please try again.", false);
+            });
+        }
+        
+        function showTypingIndicator() {
+            const loadingId = 'loading-' + Date.now();
+            const messageContainer = document.createElement('div');
+            messageContainer.className = 'message-container';
+            messageContainer.id = loadingId;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar bot-avatar';
+            avatar.innerHTML = '<i class="fas fa-robot"></i>';
+            
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'bot-message';
+            loadingDiv.innerHTML = '<div class="loading"></div> MedAI is typing...';
+            
+            messageContainer.appendChild(avatar);
+            messageContainer.appendChild(loadingDiv);
+            chatBox.appendChild(messageContainer);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            
+            return loadingId;
+        }
+        
+        function hideTypingIndicator(loadingId) {
+            const loadingElement = document.getElementById(loadingId);
+            if (loadingElement) {
+                loadingElement.remove();
+            }
+        }
+        
+        function addUserMessage(message) {
+            const messageContainer = document.createElement('div');
+            messageContainer.className = 'message-container user-message-container';
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'user-message';
+            messageDiv.textContent = message;
+            
+            const timestamp = document.createElement('span');
+            timestamp.className = 'timestamp';
+            timestamp.textContent = getCurrentTime();
+            messageDiv.appendChild(timestamp);
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar user-avatar';
+            avatar.innerHTML = '<i class="fas fa-user"></i>';
+            
+            messageContainer.appendChild(messageDiv);
+            messageContainer.appendChild(avatar);
+            chatBox.appendChild(messageContainer);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
+        function addBotMessage(message, isEmergency = false) {
+            const messageContainer = document.createElement('div');
+            messageContainer.className = 'message-container';
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar bot-avatar';
+            avatar.innerHTML = '<i class="fas fa-robot"></i>';
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'bot-message';
+            
+            // Handle emergency messages with special formatting
+            if (isEmergency) {
+                const emergencyTag = document.createElement('span');
+                emergencyTag.className = 'emergency-tag';
+                emergencyTag.innerHTML = '<i class="fas fa-exclamation-triangle mr-1"></i> EMERGENCY';
+                
+                // Remove EMERGENCY text from message if present
+                const cleanMessage = message.replace(/⚠️ EMERGENCY: /g, '');
+                messageDiv.textContent = cleanMessage;
+                messageDiv.prepend(emergencyTag);
+            } else {
+                messageDiv.textContent = message;
+            }
+            
+            const timestamp = document.createElement('span');
+            timestamp.className = 'timestamp';
+            timestamp.textContent = getCurrentTime();
+            messageDiv.appendChild(timestamp);
+            
+            messageContainer.appendChild(avatar);
+            messageContainer.appendChild(messageDiv);
+            chatBox.appendChild(messageContainer);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
+        function addSuggestionButtons(suggestions) {
+            suggestionArea.innerHTML = '';
+            
+            suggestions.forEach(suggestion => {
+                const button = document.createElement('button');
+                button.className = 'suggestion-btn';
+                button.textContent = suggestion;
+                button.addEventListener('click', () => {
+                    userInput.value = suggestion;
+                    sendMessage();
+                });
+                suggestionArea.appendChild(button);
+            });
+        }
+        
+        function updateSuggestions(botMessage) {
+            const lowercaseMessage = botMessage.toLowerCase();
+            
+            if (lowercaseMessage.includes("location")) {
+                addSuggestionButtons([
+                    "Mumbai", "Delhi", "Bangalore", 
+                    "Chennai", "Hyderabad", "Kolkata",
+                    "Pune", "Jaipur", "Ahmedabad"
+                ]);
+            } else if (lowercaseMessage.includes("symptoms")) {
+                addSuggestionButtons([
+                    "Severe headache and dizziness",
+                    "Chest pain and shortness of breath",
+                    "Stomach pain and nausea",
+                    "Skin rash and itching",
+                    "Joint pain and swelling",
+                    "Fever and cough"
+                ]);
+            } else if (lowercaseMessage.includes("no") && lowercaseMessage.includes("found")) {
+                // No doctors found scenario
+                addSuggestionButtons([
+                    "Let me try another location",
+                    "I have different symptoms",
+                    "Can you suggest nearby cities?"
+                ]);
+            }
+        }
+        
+        function showDoctorResults(doctors, specialty) {
+            doctorResults.style.display = 'block';
+            doctorsList.innerHTML = '';
+            allDoctors = doctors; // Save for sorting/filtering
+            
+            if (doctors && doctors.length > 0) {
+                document.getElementById('resultsTitle').textContent = `Recommended ${doctors[0].specialty} Specialists`;
+                displayDoctors(doctors);
+            } else {
+                // No doctors found
+                doctorsList.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <h4>No doctors found</h4>
+                        <p>No specialists matching your criteria were found in this location.</p>
+                        <p>Try a different location or symptom.</p>
+                    </div>
+                `;
+            }
+            
+            // Scroll to doctor results
+            setTimeout(() => {
+                doctorResults.scrollIntoView({ behavior: 'smooth' });
+            }, 300);
+        }
+        
+        function displayDoctors(doctors) {
+            doctorsList.innerHTML = '';
+            
+            doctors.forEach(doctor => {
+                // Generate star rating
+                const rating = parseFloat(doctor.rating);
+                let starsHtml = '';
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= rating) {
+                        starsHtml += '<i class="fas fa-star"></i>';
+                    } else if (i - 0.5 <= rating) {
+                        starsHtml += '<i class="fas fa-star-half-alt"></i>';
+                    } else {
+                        starsHtml += '<i class="far fa-star"></i>';
+                    }
+                }
+                
+                const doctorCard = document.createElement('div');
+                doctorCard.className = 'doctor-card';
+                doctorCard.innerHTML = `
+                    <div class="doctor-header">
+                        <div>
+                            <h4 class="doctor-name">${doctor.name}</h4>
+                            <span class="doctor-specialty">${doctor.specialty}</span>
+                        </div>
+                        <div class="doctor-rating">
+                            <div class="stars">${starsHtml}</div>
+                            <span class="recommendation">Recommended by ${doctor.recommendedBy}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="doctor-info">
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-hospital"></i></div>
+                            <div class="info-text">${doctor.hospital}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div class="info-text">${doctor.location}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-user-md"></i></div>
+                            <div class="info-text">${doctor.experience} years experience</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-rupee-sign"></i></div>
+                            <div class="info-text fees">₹${doctor.fees} consultation fee</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-calendar-check"></i></div>
+                            <div class="info-text">Available: ${doctor.availability.join(', ')}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-phone-alt"></i></div>
+                            <div class="info-text">${doctor.contact}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="doctor-actions">
+                        <button class="action-btn contact-btn">
+                            <i class="fas fa-phone-alt mr-1"></i> Contact
+                        </button>
+                        <button class="action-btn book-btn">
+                            <i class="fas fa-calendar-check mr-1"></i> Book Appointment
+                        </button>
+                    </div>
+                `;
+                doctorsList.appendChild(doctorCard);
+            });
+        }
+    </script>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
