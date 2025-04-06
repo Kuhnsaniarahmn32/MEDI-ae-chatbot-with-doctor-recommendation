@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedAI - Find the Right Doctor</title>
+    <meta name="description" content="AI-powered symptom analysis and doctor recommendation system">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1a73e8;
+            --primary-hover: #1669d5;
+            --secondary-color: #f8f9fa;
+            --text-color: #212529;
+            --text-secondary: #6c757d;
+            --emergency-color: #dc3545;
+            --card-bg: #ffffff;
+            --card-border: #dee2e6;
+            --card-shadow: rgba(0,0,0,0.1);
+            --icon-color: #1a73e8;
+            --body-bg: #ffffff;
+            --feature-card-bg-hover: #f0f7ff;
+        }
+
+        [data-bs-theme="dark"] {
+            --primary-color: #4285f4;
+            --primary-hover: #5a95f5;
+            --secondary-color: #282c34;
+            --text-color: #e9ecef;
+            --text-secondary: #adb5bd;
+            --emergency-color: #e05260;
+            --card-bg: #343a40;
+            --card-border: #495057;
+            --card-shadow: rgba(0,0,0,0.2);
+            --icon-color: #4285f4;
+            --body-bg: #212529;
+            --feature-card-bg-hover: #3a3f48;
+        }
+
+        body {
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .emergency-banner {
+            background-color: var(--emergency-color);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            background-color: var(--primary-color) !important;
+        }
+
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            color: white;
+            padding: 120px 0;
+            text-align: center;
+        }
+
+        .feature-card {
+            border-radius: 15px;
+            box-shadow: 0 4px 15px var(--card-shadow);
+            padding: 25px;
+            margin-bottom: 30px;
+            height: 100%;
+            transition: all 0.3s ease;
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-color);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px var(--card-shadow);
+            background-color: var(--feature-card-bg-hover);
+        }
+
+        .icon-container {
+            margin-bottom: 20px;
+            color: var(--icon-color);
+            font-size: 48px;
+        }
+
+        .feature-card h4 {
+            color: var(--text-color);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode-toggle:hover {
+            background-color: var(--primary-hover);
+            transform: scale(1.1);
+        }
+
+        .doctor-specialties {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .specialty-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .specialty-card:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        .section-title {
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            color: var(--text-color);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-color);
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+
+        .emergency-section {
+            background-color: var(--emergency-color);
+            color: white;
+            padding: 60px 0;
+        }
+
+        .emergency-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .emergency-card:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .faq-section {
+            padding: 60px 0;
+            background-color: var(--secondary-color);
+        }
+
+        .accordion-button {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .accordion-button:not(.collapsed) {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .accordion-body {
+            background-color: var(--card-bg);
+            color: var(--text-secondary);
+        }
+
+        .testimonial {
+            padding: 30px;
+            border-radius: 15px;
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 15px var(--card-shadow);
+            margin-bottom: 30px;
+            border: 1px solid var(--card-border);
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .testimonial-author img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .testimonial-author-info h5 {
+            margin-bottom: 0;
+            color: var(--text-color);
+        }
+
+        .testimonial-author-info p {
+            margin-bottom: 0;
+            color: var(--text-secondary);
+        }
+
+        .footer {
+            background-color: var(--secondary-color);
+            padding: 60px 0 30px;
+            color: var(--text-color);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--card-border);
+            padding-top: 30px;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 80px 0;
+            }
+            
+            .feature-card {
+                padding: 20px;
+            }
+            
+            .specialty-card {
+                padding: 15px;
+            }
+        }
+
+        /* Animation classes */
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .slide-up {
+            animation: slideUp 0.8s ease-in-out;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .search-container {
+            margin: 20px auto;
+            max-width: 600px;
+        }
+
+        .search-box {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            padding-left: 50px;
+            border-radius: 30px;
+            border: 1px solid var(--card-border);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Emergency Banner -->
+    <div class="emergency-banner">
+        <div class="container d-flex justify-content-center align-items-center">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <span>In case of medical emergency, call 112 immediately</span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="fas fa-heartbeat me-2"></i>
+                MedAI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/chat">Chat with MedAI</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#faq">FAQ</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="display-4 mb-4 fade-in">Find the Right Doctor for Your Symptoms</h1>
+            <p class="lead mb-4 slide-up">AI-powered medical specialist matching system</p>
+            <div class="d-flex justify-content-center gap-3 slide-up" style="animation-delay: 0.3s;">
+                <a href="/chat" class="btn btn-primary btn-lg px-4">
+                    <i class="fas fa-comment-medical me-2"></i>Start Chat
+                </a>
+                <a href="#emergency" class="btn btn-danger btn-lg px-4">
+                    <i class="fas fa-ambulance me-2"></i>Emergency Help
+                </a>
+            </div>
+            
+            <!-- Search Box -->
+            <div class="search-container mt-5 slide-up" style="animation-delay: 0.5s;">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Describe your symptoms..." id="symptomSearch">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="section-title">How It Works</h2>
+            <div class="row">
+                <div class="col-md-4 slide-up" style="animation-delay: 0.1s;">
+                    <div class="feature-card">
+                        <div class="icon-container">
+                            <i class="fas fa-notes-medical"></i>
+                        </div>
+                        <h4>Describe Symptoms</h4>
+                        <p>Share your symptoms in natural language and let our AI understand your health concerns. No medical terminology needed.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 slide-up" style="animation-delay: 0.3s;">
+                    <div class="feature-card">
+                        <div class="icon-container">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h4>AI Analysis</h4>
+                        <p>Our advanced Natural Language Processing system analyzes your symptoms to determine the appropriate medical specialty.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 slide-up" style="animation-delay: 0.5s;">
+                    <div class="feature-card">
+                        <div class="icon-container">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <h4>Get Matched</h4>
+                        <p>Receive personalized recommendations for top-rated specialists in your area based on your symptoms and location.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title">What Our Users Say</h2>
+            <div class="row">
+                <div class="col-md-4 slide-up" style="animation-delay: 0.1s;">
+                    <div class="testimonial">
+                        <p>"MedAI helped me find the perfect specialist for my chronic back pain. The recommendations were spot-on!"</p>
+                        <div class="testimonial-author">
+                            <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="User">
+                            <div class="testimonial-author-info">
+                                <h5>Priya Singh</h5>
+                                <p>Delhi</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 slide-up" style="animation-delay: 0.3s;">
+                    <div class="testimonial">
+                        <p>"The symptom analysis was incredibly accurate. I was connected with a specialist who diagnosed my condition correctly."</p>
+                        <div class="testimonial-author">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+                            <div class="testimonial-author-info">
+                                <h5>Rajesh Kumar</h5>
+                                <p>Mumbai</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 slide-up" style="animation-delay: 0.5s;">
+                    <div class="testimonial">
+                        <p>"As a first-time parent, finding the right pediatrician was stressful until I used MedAI. So simple and effective!"</p>
+                        <div class="testimonial-author">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User">
+                            <div class="testimonial-author-info">
+                                <h5>Anjali Patel</h5>
+                                <p>Bangalore</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Emergency Section -->
+    <section id="emergency" class="emergency-section">
+        <div class="container text-center">
+            <h2 class="mb-4">Emergency Assistance</h2>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="emergency-card">
+                        <i class="fas fa-phone-alt fa-3x mb-3"></i>
+                        <h4 class="mb-3">Immediate Help</h4>
+                        <p>Contact emergency services immediately if you're experiencing severe symptoms:</p>
+                        <a href="tel:112" class="btn btn-light mt-3 pulse">
+                            <i class="fas fa-phone me-2"></i>Call 112
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="emergency-card">
+                        <i class="fas fa-hospital fa-3x mb-3"></i>
+                        <h4 class="mb-3">Nearest Hospitals</h4>
+                        <p>Find emergency care centers near your current location:</p>
+                        <button class="btn btn-light mt-3" id="findHospitals">
+                            <i class="fas fa-map-marker-alt me-2"></i>Locate Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Doctor Specialties -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="section-title">Our Specialist Network</h2>
+            <div class="doctor-specialties">
+                <div class="specialty-card slide-up" style="animation-delay: 0.1s;">
+                    <i class="fas fa-heart mb-3"></i>
+                    <h5>Cardiologists</h5>
+                </div>
+                <div class="specialty-card slide-up" style="animation-delay: 0.2s;">
+                    <i class="fas fa-brain mb-3"></i>
+                    <h5>Neurologists</h5>
+                </div>
+                <div class="specialty-card slide-up" style="animation-delay: 0.3s;">
+                    <i class="fas fa-child mb-3"></i>
+                    <h5>Pediatricians</h5>
+                </div>
+                <div class="specialty-card slide-up" style="animation-delay: 0.4s;">
+                    <i class="fas fa-allergies mb-3"></i>
+                    <h5>Dermatologists</h5>
+                </div>
+                <div class="specialty-card slide-up" style="animation-delay: 0.5s;">
+                    <i class="fas fa-bone mb-3"></i>
+                    <h5>Orthopedists</h5>
+                </div>
+                <div class="specialty-card slide-up" style="animation-delay: 0.6s;">
+                    <i class="fas fa-venus mb-3"></i>
+                    <h5>Gynecologists</h5>
+                </div>
+                <div class="specialty-card slide-up" style="animation-delay: 0.7s;">
+                    <i class="fas fa-lungs mb-3"></i>
+                    <h5>Pulmonologists</h5>
+                </div>
+                <div class="specialty-card slide-up" style="animation-delay: 0.8s;">
+                    <i class="fas fa-eye mb-3"></i>
+                    <h5>Ophthalmologists</h5>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq-section">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            
+            <!-- FAQ Categories -->
+            <ul class="nav nav-pills mb-4 justify-content-center" id="faq-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="general-tab" data-bs-toggle="pill" data-bs-target="#general" type="button">General</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="technical-tab" data-bs-toggle="pill" data-bs-target="#technical" type="button">Using MedAI</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="doctors-tab" data-bs-toggle="pill" data-bs-target="#doctors" type="button">About Doctors</button>
+                </li>
+            </ul>
+            
+            <!-- FAQ Content -->
+            <div class="tab-content" id="faq-content">
+                <!-- General FAQs -->
+                <div class="tab-pane fade show active" id="general" role="tabpanel">
+                    <div class="accordion" id="accordionGeneral">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                    What is MedAI and how does it work?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionGeneral">
+                                <div class="accordion-body">
+                                    MedAI is an AI-powered symptom analysis and doctor recommendation system. You describe your symptoms in natural language, and our advanced AI analyzes them to determine the appropriate medical specialty. Based on your symptoms and location, we recommend top-rated specialists in your area.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                    Is MedAI a substitute for medical advice?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionGeneral">
+                                <div class="accordion-body">
+                                    No, MedAI is not a substitute for professional medical advice, diagnosis, or treatment. Our service helps connect you with appropriate specialists based on your symptoms, but it does not provide medical diagnoses. Always consult with a qualified healthcare provider for medical concerns.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                    Is MedAI free to use?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionGeneral">
+                                <div class="accordion-body">
+                                    Yes, MedAI's symptom analysis and doctor recommendation services are completely free to use. We do not charge fees for connecting you with specialists. However, consultation fees with the recommended doctors are determined by the healthcare providers themselves.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Technical FAQs -->
+                <div class="tab-pane fade" id="technical" role="tabpanel">
+                    <div class="accordion" id="accordionTechnical">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
+                                    How accurate is MedAI's symptom analysis?
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse show" data-bs-parent="#accordionTechnical">
+                                <div class="accordion-body">
+                                    MedAI uses advanced Natural Language Processing (NLP) to analyze symptoms and recommend appropriate specialists. While our system is continuously learning and improving, it's designed to recommend the most relevant specialist type based on your symptoms. However, for complex or unusual symptoms, consulting multiple specialists may be necessary.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive">
+                                    How should I describe my symptoms?
+                                </button>
+                            </h2>
+                            <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionTechnical">
+                                <div class="accordion-body">
+                                    Be as specific and detailed as possible when describing your symptoms. Include information about the location, intensity, and duration of symptoms. Mention any factors that worsen or alleviate the symptoms and any relevant medical history. The more information you provide, the more accurate our recommendations will be.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix">
+                                    Is my health information private and secure?
+                                </button>
+                            </h2>
+                            <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionTechnical">
+                                <div class="accordion-body">
+                                    Yes, we take your privacy very seriously. All your health information is encrypted and securely stored. We do not share your personal health information with third parties without your explicit consent. Our systems comply with healthcare data protection regulations to ensure the confidentiality of your medical information.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Doctor FAQs -->
+                <div class="tab-pane fade" id="doctors" role="tabpanel">
+                    <div class="accordion" id="accordionDoctors">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven">
+                                    How are doctors vetted before being included in your network?
+                                </button>
+                            </h2>
+                            <div id="collapseSeven" class="accordion-collapse collapse show" data-bs-parent="#accordionDoctors">
+                                <div class="accordion-body">
+                                    All doctors in our network are verified for their medical credentials, including education, specialization, and professional licenses. We also consider factors such as years of experience, hospital affiliations, and patient reviews. Our goal is to recommend only qualified and reputable healthcare providers.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight">
+                                    Can I book appointments through MedAI?
+                                </button>
+                            </h2>
+                            <div id="collapseEight" class="accordion-collapse collapse" data-bs-parent="#accordionDoctors">
+                                <div class="accordion-body">
+                                    Currently, MedAI provides doctor recommendations with contact information, but appointment booking is done directly with the doctor's office. We're working on integrating appointment scheduling features in the future to make the process more seamless for our users.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine">
+                                    What if I'm not satisfied with the recommended doctors?
+                                </button>
+                            </h2>
+                            <div id="collapseNine" class="accordion-collapse collapse" data-bs-parent="#accordionDoctors">
+                                <div class="accordion-body">
+                                    If you're not satisfied with our recommendations, you can provide feedback or request additional options. We continuously update our doctor database and use feedback to improve our recommendation algorithms. You can also try providing more detailed symptom information for more accurate specialist matching.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h4>About MedAI</h4>
+                    <p>MedAI is an AI-powered healthcare platform that connects patients with the right medical specialists based on their symptoms.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h4>Quick Links</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="/chat">Chat with MedAI</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h4>Contact Us</h4>
+                    <p>
+                        <i class="fas fa-envelope me-2"></i> support@medai.com<br>
+                        <i class="fas fa-phone me-2"></i> +91 9876543210<br>
+                        <i class="fas fa-map-marker-alt me-2"></i> Delhi, India
+                    </p>
+                    <div class="social-icons mt-3">
+                        <a href="#" class="me-2"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="me-2"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="me-2"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom text-center">
+                <p>&copy; 2025 MedAI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <script>
+        // Dark mode toggle
+        function toggleDarkMode() {
+            const htmlEl = document.documentElement;
+            const isDark = htmlEl.getAttribute('data-bs-theme') === 'dark';
+            const newTheme = isDark ? 'light' : 'dark';
+            
+            htmlEl.setAttribute('data-bs-theme', newTheme);
+            
+            // Update icon
+            const iconEl = document.querySelector('.dark-mode-toggle i');
+            if (newTheme === 'dark') {
+                iconEl.classList.remove('fa-moon');
+                iconEl.classList.add('fa-sun');
+            } else {
+                iconEl.classList.remove('fa-sun');
+                iconEl.classList.add('fa-moon');
+            }
+            
+            // Save preference
+            localStorage.setItem('theme', newTheme);
+        }
+        
+        // Check for saved theme preference
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-bs-theme', savedTheme);
+                
+                // Update icon based on saved theme
+                const iconEl = document.querySelector('.dark-mode-toggle i');
+                if (savedTheme === 'dark') {
+                    iconEl.classList.remove('fa-moon');
+                    iconEl.classList.add('fa-sun');
+                }
+            }
+            
+            // Add event listener for symptom search
+            const symptomSearch = document.getElementById('symptomSearch');
+            if (symptomSearch) {
+                symptomSearch.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        window.location.href = `/chat?symptoms=${encodeURIComponent(this.value)}`;
+                    }
+                });
+            }
+            
+            // Animate elements on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('show');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            document.querySelectorAll('.slide-up').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Hospital finder button
+            const findHospitalsBtn = document.getElementById('findHospitals');
+            if (findHospitalsBtn) {
+                findHospitalsBtn.addEventListener('click', function() {
+                    if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(
+                            position => {
+                                const { latitude, longitude } = position.coords;
+                                window.open(`https://www.google.com/maps/search/hospitals/@${latitude},${longitude},14z`, '_blank');
+                            },
+                            error => {
+                                alert('Please enable location services to find nearby hospitals.');
+                            }
+                        );
+                    } else {
+                        alert('Geolocation is not supported by your browser.');
+                    }
+                });
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
